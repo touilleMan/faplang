@@ -1,0 +1,5 @@
+-- supported stuff
+1
+1 + 1
+(6 - 3)
+((1 + 1) * 2) -- with inline comments
