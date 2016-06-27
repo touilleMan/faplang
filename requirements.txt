@@ -1,0 +1,2 @@
+pytest
+pyparsing==2.1.5
