@@ -28,7 +28,7 @@ def test_atom():
 def test_operation():
     for src, expected in (
             ('1 + 2', Application(Application(Variable('add'), Number(1)), Number(2))),
-            ('-1 - -2', Application(Application(Variable('min'), Number(-1)), Number(-2))),
+            ('-1 - -2', Application(Application(Variable('sub'), Number(-1)), Number(-2))),
             ('1 + 2 / 3', Application(
                 Application(
                     Variable('add'),

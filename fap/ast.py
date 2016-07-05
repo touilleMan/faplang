@@ -31,6 +31,10 @@ class Boolean(Value):
     pass
 
 
+class String(Value):
+    pass
+
+
 class Variable(Value):
     pass
 
@@ -98,12 +102,13 @@ OPERATORS_MAP = OrderedDict([
     ('*', Variable('mul')),
     ('/', Variable('div')),
     ('+', Variable('add')),
-    ('-', Variable('min')),
+    ('-', Variable('sub')),
     ('&&', Variable('and')),
     ('||', Variable('or')),
     ('|', Variable('bor')),
     ('&', Variable('band')),
-    ('==', Variable('equal'))
+    ('==', Variable('equal')),
+    ('%', Variable('mod'))
 ])
 
 
@@ -115,17 +120,17 @@ lparen = Literal('(').suppress()
 rparen = Literal(')').suppress()
 
 label = Word(alphas + '_', alphanums + '_').setParseAction(lambda s, l, t: ''.join(t[0])).setName('label')
-operator = oneOf(' '.join(OPERATORS_MAP.keys())).setParseAction(lambda s, l, t: t[0]).setName('operator')
+# operator = oneOf(' '.join(OPERATORS_MAP.keys())).setParseAction(lambda s, l, t: t[0]).setName('operator')
 
 expr = Forward()
 
 number = Combine(Optional('-') + Word(nums)).setParseAction(lambda s, l, t: Number(int(t[0])))
 boolean = (Literal('True') | Literal('False')).setParseAction(lambda s, l, t: Boolean(t[0] == 'True'))
 variable = label.setParseAction(lambda s, l, t: Variable(t[0]))
-# string = ...
+string = QuotedString(quoteChar="\"", escChar="\\", escQuote="\\\"").setParseAction(lambda s, l, t: String(t[0]))
 lambdaa = (Literal('\\').suppress() + Group(ZeroOrMore(label)) + Literal("=").suppress() + expr).setParseAction(lambda s, l, t: Lambda(params=t[0], body=t[1]))
 
-atom = (boolean | number | variable | lambdaa | (lparen + expr + rparen).setParseAction(lambda s, l, t: t)).setName('atom')
+atom = (boolean | number | string | variable | lambdaa | (lparen + expr + rparen).setParseAction(lambda s, l, t: t)).setName('atom')
 
 func_def = (
     # label.setResultsName('name')  # TODO: token is parsed as a variable, why ?
@@ -133,7 +138,7 @@ func_def = (
     ZeroOrMore(atom).setResultsName('params') +  # Params
     Literal('=').suppress() +
     expr.setResultsName('body')  # Body
-).setParseAction(lambda s, l, t: FuncDef(t.name.value, params=t.params.asList() if t.params else None, body=t.body)).setName('func_def').setDebug()
+).setParseAction(lambda s, l, t: FuncDef(t.name.value, params=t.params.asList() if t.params else None, body=t.body)).setName('func_def')
 
 arith_op = oneOf('+ -').setParseAction(lambda s, l, t: t[0]).setName('arith_op')
 term_op = oneOf('* / %').setParseAction(lambda s, l, t: t[0]).setName('term_op')
