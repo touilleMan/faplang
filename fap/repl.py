@@ -45,7 +45,7 @@ def fap_eval(code, verbose=False):
     ast = GRAMMAR.parseString(code)
     if verbose:
         print(ast)
-    vm.exec(ast)
+    return vm.exec(ast)
 
 
 if __name__ == '__main__':
@@ -56,8 +56,9 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--verbose', action='store_true', help='Enable debug mode.')
     args = parser.parse_args()
     if args.infile:
-        fap_eval(args.infile.read(), verbose=args.verbose)
+        ret = fap_eval(args.infile.read(), verbose=args.verbose)
     elif args.c:
-        fap_eval(args.c, verbose=args.verbose)
+        ret = fap_eval(args.c, verbose=args.verbose)
     else:
-        fap_repl(verbose=args.verbose)
+        ret = fap_repl(verbose=args.verbose)
+    raise SystemExit(ret)
