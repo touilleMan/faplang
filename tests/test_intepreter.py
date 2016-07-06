@@ -1,5 +1,5 @@
-from fap.ast import GRAMMAR
-from fap.interpreter import FapVM
+from faplang.ast import GRAMMAR
+from faplang.interpreter import FapVM
 
 
 def _parse_and_exec(code):  

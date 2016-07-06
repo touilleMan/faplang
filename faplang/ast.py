@@ -97,21 +97,6 @@ class Lambda(FuncDef):
         return hash(self.params) ^ hash(self.body)
 
 
-
-OPERATORS_MAP = OrderedDict([
-    ('*', Variable('mul')),
-    ('/', Variable('div')),
-    ('+', Variable('add')),
-    ('-', Variable('sub')),
-    ('&&', Variable('and')),
-    ('||', Variable('or')),
-    ('|', Variable('bor')),
-    ('&', Variable('band')),
-    ('==', Variable('equal')),
-    ('%', Variable('mod'))
-])
-
-
 ### Grammar ###
 
 
@@ -120,7 +105,6 @@ lparen = Literal('(').suppress()
 rparen = Literal(')').suppress()
 
 label = Word(alphas + '_', alphanums + '_').setParseAction(lambda s, l, t: ''.join(t[0])).setName('label')
-# operator = oneOf(' '.join(OPERATORS_MAP.keys())).setParseAction(lambda s, l, t: t[0]).setName('operator')
 
 expr = Forward()
 
@@ -147,7 +131,7 @@ def build_op(s, l, t):
     elems = t.asList()
     last = elems.pop(0)
     while elems:
-        operator = OPERATORS_MAP[elems.pop(0)]
+        operator = Variable(elems.pop(0))
         operand = elems.pop(0)
         last = Application(Application(operator, last), operand)
     return last

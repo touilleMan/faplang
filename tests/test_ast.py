@@ -1,4 +1,4 @@
-from fap.ast import *
+from faplang.ast import *
 
 
 def test_empty():
@@ -27,16 +27,16 @@ def test_atom():
 
 def test_operation():
     for src, expected in (
-            ('1 + 2', Application(Application(Variable('add'), Number(1)), Number(2))),
-            ('-1 - -2', Application(Application(Variable('sub'), Number(-1)), Number(-2))),
+            ('1 + 2', Application(Application(Variable('+'), Number(1)), Number(2))),
+            ('-1 - -2', Application(Application(Variable('-'), Number(-1)), Number(-2))),
             ('1 + 2 / 3', Application(
                 Application(
-                    Variable('add'),
+                    Variable('+'),
                     Number(1)
                 ),
                 Application(
                     Application(
-                        Variable('div'),
+                        Variable('/'),
                         Number(2)
                     ),
                     Number(3)
@@ -44,10 +44,10 @@ def test_operation():
             )),
             ('1 / 2 + 3', Application(
                 Application(
-                    Variable('add'),
+                    Variable('+'),
                     Application(
                         Application(
-                            Variable('div'),
+                            Variable('/'),
                             Number(1)
                         ),
                         Number(2)
@@ -57,10 +57,10 @@ def test_operation():
             )),
             ('(1 + 2) / 3', Application(
                 Application(
-                    Variable('div'),
+                    Variable('/'),
                     Application(
                         Application(
-                            Variable('add'),
+                            Variable('+'),
                             Number(1)
                         ),
                         Number(2)
@@ -84,12 +84,12 @@ def test_func_def():
             ('f x = x * 2', FuncDef(
                 'f',
                 params=[Variable('x')],
-                body=Application(Application(Variable('mul'), Variable('x')), Number(2)))
+                body=Application(Application(Variable('*'), Variable('x')), Number(2)))
             ),
             ('my_f x y z = z(x * y)', FuncDef(
                 'my_f',
                 params=[Variable('x'), Variable('y'), Variable('z')],
-                body=Application(Variable('z'), Application(Application(Variable('mul'), Variable('x')), Variable('y'))))
+                body=Application(Variable('z'), Application(Application(Variable('*'), Variable('x')), Variable('y'))))
             )
         ):
         ast = GRAMMAR.parseString(src)
@@ -102,12 +102,12 @@ def test_lambda():
             ('\ = 1', Lambda(body=Number(1))),
             ('\ x y = x * 2', Lambda(
                 params=[Variable('x'), Variable('y')],
-                body=Application(Application(Variable('mul'), Variable('x')), Number(2)))
+                body=Application(Application(Variable('*'), Variable('x')), Number(2)))
             ),
             ('(\= 3 * f True) 4', Application(
                 Lambda(body=Application(
                     Application(
-                        Variable('mul'),
+                        Variable('*'),
                         Number(3)
                     ),
                     Application(
