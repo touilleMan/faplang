@@ -13,12 +13,12 @@ Everything is under WTFPLv2 license, how could it be otherwise ? ;-)
 
 Work in progress:
 
-- [X] (Grammar) Arithmetical/Boolean operators
-- [X] (Grammar) Function and lambda definition
-- [X] (Grammar) Comments, variable, strings
+- [X] Grammar: Arithmetical/Boolean operators
+- [X] Grammar: Function and lambda definition
+- [X] Grammar: Comments, variable, strings
 - [X] AST generation
 - [X] Interpreter command line
-- [ ] (Grammar) Typing system
+- [ ] Grammar: Typing system
 - [ ] `let` keyword and assignation
 - [ ] std lib
 - [ ] Compiler frontend
